@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+    mongoose.Promise = global.Promise;
 
 var gameDataSchema = mongoose.Schema({
     project_id: {
@@ -32,6 +33,10 @@ var gameDataSchema = mongoose.Schema({
     },
     end_date: {
         type: Date
+    },
+    play_time: {
+        type: Number,
+        default: 0
     },
     ending: {
         type: String

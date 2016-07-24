@@ -1,0 +1,10 @@
+CHANGELOG
+=========
+
+v 0.0.1.0725
+------------
+* Changes: Replaced some callback with ES6-Promise;
+
+* Addition: Play Data can be submitted now;
+* Addition: Added a lib/helper.js file which contains all the helper functions;
+* Addition: Created a lib/constant.js file which will contain all the constant values;
