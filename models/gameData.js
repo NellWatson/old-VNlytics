@@ -6,11 +6,6 @@ var gameDataSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    game_id: {
-        type: String,
-        required: true,
-        unique: true
-    },
     total_session: {
         type: Number,
         required: true

@@ -7,7 +7,7 @@ var ProjectsData = require("../models/projects");
     GameData = require("../models/gameData");
 
 // Test intialisation of Founders Life Project.
-router.use("/create/new/project/founder_life/first_run", function(req, res) {
+router.get("/create/new/project/founder_life/first_run", function(req, res) {
 
     // This is the default project.
     var project = {
@@ -28,6 +28,10 @@ router.use("/create/new/project/founder_life/first_run", function(req, res) {
 
         res.json(project);
     })
+});
+
+router.post("/", function(req, res) {
+    res.send("Cool. We are working. Now you can proceed to cry.");
 });
 
 // Load all the available API routes

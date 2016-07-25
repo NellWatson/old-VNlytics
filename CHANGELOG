@@ -3,6 +3,13 @@ CHANGELOG
 
 v 0.0.1.0725
 ------------
+* Changes: Use Morgan for logging;
+* Changes: Use bodyParser.json() instead of urlencoded to support json content;
+* Changes: Let Mongoose generate a game ID to prevent collision;
+* Changes: gamePlayData no longer needs game_id key;
+
+v 0.0.1.0725
+------------
 * Changes: Replaced some callback with ES6-Promise;
 
 * Addition: Play Data can be submitted now;

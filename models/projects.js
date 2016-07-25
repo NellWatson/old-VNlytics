@@ -7,7 +7,8 @@ var projectSchema = mongoose.Schema({
         required: true,
         unique: true,
         minlength: 8,
-        maxlength: 24
+        maxlength: 24,
+        index: true
     },
     title: {
         type: String,

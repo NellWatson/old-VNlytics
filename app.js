@@ -2,12 +2,14 @@
 var express = require("express");
     mongoose = require("mongoose");
     bodyParser = require("body-parser");
+    morgan = require("morgan");
 
 // Intialise exress
 var app = express();
 
 // Use the bodyParser module for parsing response
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(morgan("dev"));
 
 // Connect to the MonogoDB database
 mongoose.connect("mongodb://localhost:27017/test")
