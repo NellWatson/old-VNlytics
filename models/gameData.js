@@ -40,9 +40,8 @@ var gameDataSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    created: {
-        type: Date,
-        default: Date.now
+    filled_form: {
+        type: Boolean
     }
 });
 

@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+v 0.0.1.0726
+------------
+
 v 0.0.1.0725
 ------------
 * Changes: Use Morgan for logging;
