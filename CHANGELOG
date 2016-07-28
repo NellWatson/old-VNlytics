@@ -1,8 +1,15 @@
 CHANGELOG
 =========
 
+v 0.0.1.0728
+------------
+* Changes: Added rudimentary support for TellTale Games style choice percentage. "/projectId/gameId/choices"
+* Changes: Added BSD license.
+
 v 0.0.1.0726
 ------------
+* Changes: Laid ground work for accepting form submission;
+* Changes: Removed created from GameData model since we already had start_date field;
 
 v 0.0.1.0725
 ------------

@@ -1,9 +1,10 @@
 {
   "name": "VNlytics",
   "descritpion": "A simple web server for collecting analtics and player feedback from story based games like Ren'Py.",
-  "version": "0.0.1.0726",
+  "version": "0.0.1.0728",
   "author": "Dipesh Aggarwal",
   "private": true,
+  "license": "BSD",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",

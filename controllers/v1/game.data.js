@@ -92,5 +92,20 @@ v1.post("/:_gameId", function(req, res) {
         });
 });
 
+v1.get("/:_gameId/:_queryKey", function(req, res) {
+    var _gameId = req.params._gameId;
+    var _queryKey = "data." + req.params._queryKey;
+
+    helper.getDistinct( PlayData, _queryKey )
+        .then(function(c) {
+            if ( c.length == 0 ) {
+                return res.send("No play entries for folloing game exists.");
+            } else {
+                console.log(Object.keys(c));
+                return res.json(c);
+            }
+        }
+    )
+});
+
 module.exports = v1;
-;
