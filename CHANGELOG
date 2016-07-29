@@ -1,16 +1,24 @@
 CHANGELOG
 =========
 
+v 0.0.3.0729
+------------
+* Changes: PlayData isn't used now. It's been merged with GameData to allow for greater control;
+* Changes: Stats screen support additional query parameters now;
+* Changes: Added support for "/gameId/end" for marking a game play as finished;
+
+* Addition: Added "updatePlayData" to allow storing play data in GameData collection;
+
 v 0.0.2.0729
 ------------
-* Changes: JSON output is prettier now.
-* Changes: "projectId/choices" return a json object containing all choices.
-* Changes: Added "getKey" helper function.
+* Changes: JSON output is prettier now;
+* Changes: "projectId/choices" return a json object containing all choices;
+* Changes: Added "getKey" helper function;
 
 v 0.0.1.0728
 ------------
-* Changes: Added rudimentary support for TellTale Games style choice percentage. "/projectId/gameId/choices"
-* Changes: Added BSD license.
+* Changes: Added rudimentary support for TellTale Games style choice percentage, "/projectId/gameId/choices";
+* Changes: Added BSD license;
 
 v 0.0.1.0726
 ------------

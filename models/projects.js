@@ -47,8 +47,8 @@ module.exports.getData = function(callback, limit) {
     ProjectsData.find(callback).limit(limit);
 };
 
-module.exports.updateData = function(pid, updatedObj, options, callback) {
-    var query = {project_id: pid};
+module.exports.updateData = function(projectId, updatedObj, options, callback) {
+    var query = {project_id: projectId};
     var update = {$set: updatedObj};
 
     ProjectsData.findOneAndUpdate(query, update, options, callback);

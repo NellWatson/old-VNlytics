@@ -87,4 +87,4 @@ module.exports.aggregateData = function( field, query, callback ) {
     var pipeline = createPipeline( field, query );
 
     PlayData.aggregate( pipeline, callback );
-}
+};

@@ -5,7 +5,6 @@ var v1 = require("express").Router();
 // Load the models
 var ProjectsData = require("../../models/projects");
     GameData = require("../../models/gameData");
-    PlayData = require("../../models/playData");
 
 // Load helper function
 var helper = require("../../lib/helper");
@@ -48,7 +47,7 @@ v1.post("/", function(req, res) {
             } else {
                 var gameDataObj = req.body;
                 
-                GameData.addGameId(gameDataObj, function (err, doc) {
+                GameData.addGameId( gameDataObj, function (err, doc) {
                     if (err) {
                         if (err.name == "ValidationError") {
                             return res.send("Please send all the required details.");
@@ -66,16 +65,15 @@ v1.post("/", function(req, res) {
 
 v1.post("/:_gameId", function(req, res) {
     var _gameId = req.params._gameId;
-    var _projectId = req.originalUrl.slice(4, -26)
     var postObj = req.body;
 
-    helper.documentExists( GameData, {_id: _gameId} )
+    helper.documentExists( GameData, { _id: _gameId } )
         .then(function(c) {
             if ( c == 0 ) {
                 return res.send("The provided Game Id does not exist in our database.");
             } else {
 
-                PlayData.addPlayData( _projectId, _gameId, postObj, function (err, doc) {
+                GameData.updatePlayData( _gameId, postObj, function(err, doc) {
                     
                     if (err) {
                         throw err;
@@ -92,5 +90,40 @@ v1.post("/:_gameId", function(req, res) {
             }
         });
 });
+
+v1.post("/:_gameId/end", function(req, res) {
+    var _gameId = req.params._gameId;
+
+    var allowedUpdate = [ "end_date", "play_time", "ending", "filled_form" ];
+
+    var updatedObj = helper.validatePost( allowedUpdate, req.body );
+
+    if (helper.isEmpty(updatedObj)) {
+        return res.send("Please send data to be updated with your request.");
+    }
+
+    helper.documentExists( GameData, { _id: _gameId } )
+        .then(function(c) {
+            if ( c == 0 ) {
+                return res.send("The provided Game Id does not exist in our database");
+            } else {
+
+                GameData.updateData( _projectId, updatedObj, {}, function(err, doc) {
+
+                    if (err) {
+                        throw err;
+                    };
+
+                    res.json(_gameId + "is marked as finish.");
+                })
+            }
+        })
+
+        .catch(function(err) {
+            if (err.name == "CastError" && err.kind == "ObjectId") {
+                res.send("Please use a valid ID");
+            }
+        });
+})
 
 module.exports = v1;

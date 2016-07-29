@@ -24,6 +24,15 @@ app.use(express.static(__dirname + "/public"));
 //Load the different routes
 app.use(require("./controllers"));
 
+// Custom Erro Handline
+app.use(function(req, res) {
+   res.send('404: Page not Found', 404);
+});
+
+app.use(function(error, req, res, next) {
+   res.send('500: Internal Server Error', 500);
+});
+
 // Start the server
 app.listen(3000);
 console.log("Server started on port 3000");

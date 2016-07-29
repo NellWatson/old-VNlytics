@@ -41,15 +41,15 @@ v1.get("/:_projectId", function(req, res) {
 
 v1.put("/:_projectId", function(req, res) {
     var _projectId = req.params._projectId;
-    var allowedUpdate = ["title", "developer"];
+    var allowedUpdate = [ "title", "developer" ];
 
-    var updatedObj = helper.validatePost(allowedUpdate, req.body);
+    var updatedObj = helper.validatePost( allowedUpdate, req.body );
 
     if (helper.isEmpty(updatedObj)) {
         return res.send("Please send data to be updated with your request.");
     }
 
-    ProjectsData.updateData(_projectId, updatedObj, {}, function (err, doc) {
+    ProjectsData.updateData( _projectId, updatedObj, {}, function (err, doc) {
         
         if (err) {
             throw err;
@@ -73,13 +73,19 @@ v1.get("/:_projectId/stats", function(req, res) {
 
 v1.get("/:_projectId/:_queryKey", function(req, res) {
     var _field = req.params._queryKey;
-    var query = { "project_id": req.params._projectId };
+    req.query.project_id = req.params._projectId;
 
-    PlayData.aggregateData( _field, query, function (err, project) {
+    GameData.aggregateData( _field, req.query, function (err, project) {
+        
         if (err) {
             throw err;
         };
-        res.json(project);
+
+        if ( project.length == 0 ) {
+            res.send("No data found.");
+        } else {
+            res.json(project);
+        }
     })
 });
 
