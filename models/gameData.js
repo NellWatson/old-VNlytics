@@ -6,10 +6,6 @@ var gameDataSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    total_session: {
-        type: Number,
-        required: true
-    },
     platform: {
         type: String,
         required: true
@@ -42,6 +38,9 @@ var gameDataSchema = mongoose.Schema({
     },
     filled_form: {
         type: Boolean
+    },
+    play_data: {
+        type: mongoose.Schema.Types.Mixed
     }
 });
 

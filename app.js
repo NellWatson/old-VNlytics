@@ -7,6 +7,9 @@ var express = require("express");
 // Intialise exress
 var app = express();
 
+// When we respond with a json object, indent every block with 4 spaces.
+app.set("json spaces", 4);
+
 // Use the bodyParser module for parsing response
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan("dev"));

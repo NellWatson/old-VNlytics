@@ -66,6 +66,7 @@ v1.post("/", function(req, res) {
 
 v1.post("/:_gameId", function(req, res) {
     var _gameId = req.params._gameId;
+    var _projectId = req.originalUrl.slice(4, -26)
     var postObj = req.body;
 
     helper.documentExists( GameData, {_id: _gameId} )
@@ -74,7 +75,7 @@ v1.post("/:_gameId", function(req, res) {
                 return res.send("The provided Game Id does not exist in our database.");
             } else {
 
-                PlayData.addPlayData( _gameId, postObj, function (err, doc) {
+                PlayData.addPlayData( _projectId, _gameId, postObj, function (err, doc) {
                     
                     if (err) {
                         throw err;
@@ -90,22 +91,6 @@ v1.post("/:_gameId", function(req, res) {
                 res.send("Please use a valid ID");
             }
         });
-});
-
-v1.get("/:_gameId/:_queryKey", function(req, res) {
-    var _gameId = req.params._gameId;
-    var _queryKey = "data." + req.params._queryKey;
-
-    helper.getDistinct( PlayData, _queryKey )
-        .then(function(c) {
-            if ( c.length == 0 ) {
-                return res.send("No play entries for folloing game exists.");
-            } else {
-                console.log(Object.keys(c));
-                return res.json(c);
-            }
-        }
-    )
 });
 
 module.exports = v1;

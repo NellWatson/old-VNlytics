@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+v 0.0.2.0729
+------------
+* Changes: JSON output is prettier now.
+* Changes: "projectId/choices" return a json object containing all choices.
+* Changes: Added "getKey" helper function.
+
 v 0.0.1.0728
 ------------
 * Changes: Added rudimentary support for TellTale Games style choice percentage. "/projectId/gameId/choices"

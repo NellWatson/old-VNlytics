@@ -71,4 +71,16 @@ v1.get("/:_projectId/stats", function(req, res) {
     })
 });
 
+v1.get("/:_projectId/:_queryKey", function(req, res) {
+    var _field = req.params._queryKey;
+    var query = { "project_id": req.params._projectId };
+
+    PlayData.aggregateData( _field, query, function (err, project) {
+        if (err) {
+            throw err;
+        };
+        res.json(project);
+    })
+});
+
 module.exports = v1;
