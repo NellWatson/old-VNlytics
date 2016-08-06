@@ -73,6 +73,7 @@ v1.get("/:_projectId/stats", function(req, res) {
 
 v1.get("/:_projectId/:_queryKey", function(req, res) {
     var _field = req.params._queryKey;
+    req.query = helper.sanitise(req.query);
     req.query.project_id = req.params._projectId;
 
     GameData.aggregateData( _field, req.query, function (err, project) {

@@ -45,13 +45,13 @@ v1.post("/", function(req, res) {
             if ( c == 0 ) {
                 return res.send("The provided Project Id does not exist in our database.");
             } else {
-                var gameDataObj = req.body;
+                var gameDataObj = helper.sanitise(req.body);
                 
                 GameData.addGameId( gameDataObj, function (err, doc) {
                     if (err) {
-                        if (err.name == "ValidationError") {
+                        if ( err.name == "ValidationError" ) {
                             return res.send("Please send all the required details.");
-                        } else if (err.name == "MongoError" && err.code == 11000) {
+                        } else if ( err.name == "MongoError" && err.code == 11000 ) {
                             return res.send("Please provide a unique game ID");
                         }
                         throw err;
@@ -65,7 +65,7 @@ v1.post("/", function(req, res) {
 
 v1.post("/:_gameId", function(req, res) {
     var _gameId = req.params._gameId;
-    var postObj = req.body;
+    var postObj = helper.sanitise(req.body);
 
     helper.documentExists( GameData, { _id: _gameId } )
         .then(function(c) {
@@ -92,13 +92,13 @@ v1.post("/:_gameId", function(req, res) {
 });
 
 v1.post("/:_gameId/end", function(req, res) {
-    var _gameId = req.params._gameId;
-
     var allowedUpdate = [ "end_date", "play_time", "ending", "filled_form" ];
+    req.body = helper.sanitise(req.body);
 
+    var _gameId = req.params._gameId;
     var updatedObj = helper.validatePost( allowedUpdate, req.body );
 
-    if (helper.isEmpty(updatedObj)) {
+    if ( helper.isEmpty(updatedObj) ) {
         return res.send("Please send data to be updated with your request.");
     }
 
@@ -121,7 +121,7 @@ v1.post("/:_gameId/end", function(req, res) {
 
         .catch(function(err) {
             if (err.name == "CastError" && err.kind == "ObjectId") {
-                res.send("Please use a valid ID");
+                res.send("Please use a valid ID.");
             }
         });
 })

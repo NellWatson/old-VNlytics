@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v 0.0.3.0806
+------------
+* Changes: Sanitise user input.
+
 v 0.0.3.0729
 ------------
 * Changes: PlayData isn't used now. It's been merged with GameData to allow for greater control;
