@@ -25,6 +25,9 @@ var gameDataSchema = mongoose.Schema({
     end_date: {
         type: Date
     },
+    sessions: {
+        type: Number
+    },
     play_time: {
         type: Number,
         default: 0
@@ -38,6 +41,54 @@ var gameDataSchema = mongoose.Schema({
     },
     filled_form: {
         type: Boolean
+    },
+    form_data: {
+        art: {
+            type: Number,
+            min: 0,
+            max: 10
+        },
+        sound: {
+            type: Number,
+            min: 0,
+            max: 10
+        },
+        writing: {
+            type: Number,
+            min: 0,
+            max: 10
+        },
+        gameplay: {
+            type: Number,
+            min: 0,
+            max: 10
+        },
+        overall: {
+            type: Number,
+            min: 0,
+            max: 10
+        },
+        favourite_chara: {
+            type: String
+        },
+        least_fun: {
+            type: String
+        },
+        age_group: {
+            type: String,
+            default: "None"
+        },
+        gender: {
+            type: String,
+            default: "None"
+        },
+        parting_words: {
+            type: String,
+            default: "None"
+        },
+        extra_questions: {
+            type: mongoose.Schema.Types.Mixed
+        }
     },
     play_data: [
         {
@@ -56,6 +107,9 @@ function createPipeline(field, query) {
             },
             {
                 "$unwind": "$play_data"
+            },
+            {
+                "$unwind": "$play_data.choices"
             },
             {
                 "$group": {
@@ -121,9 +175,9 @@ module.exports.updateData = function(gameId, updatedObj, options, callback) {
 };
 
 module.exports.updatePlayData = function(gameId, updatedObj, callback) {
-    var query = {_id: gameId};
+    var query = { _id: gameId };
     var update = { $push: { "play_data": updatedObj } };
-    var options = { $safe: true, upsert: true, new : true }
+    var options = { $safe: true, upsert: true, new: true };
 
     GameData.findOneAndUpdate(query, update, options, callback);
 };
@@ -136,4 +190,12 @@ module.exports.aggregateData = function( field, query, callback ) {
     var pipeline = createPipeline( field, query );
 
     GameData.aggregate( pipeline, callback );
+};
+
+module.exports.addFormData = function( gameId, formObj, callback) {
+    var query = { _id: gameId };
+    var update = { $set: { "filled_form": true, "form_data": formObj } };
+    var options = { upsert: true };
+
+    GameData.findOneAndUpdate(query, update, options, callback);
 };

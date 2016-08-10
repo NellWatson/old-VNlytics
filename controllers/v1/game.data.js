@@ -91,6 +91,35 @@ v1.post("/:_gameId", function(req, res) {
         });
 });
 
+v1.post("/:_gameId/form", function(req, res) {
+    req.body = helper.sanitise(req.body);
+
+    var _gameId = req.params._gameId;
+
+    helper.documentExists( GameData, { game_id: _gameId } )
+        .then(function(c) {
+            if ( c == 0 ) {
+                return res.send("The provided Game Id does not exist in our database");
+            } else {
+
+                GameData.addFormData( _gameId, req.body, function(err, doc) {
+
+                    if (err) {
+                        throw err;
+                    };
+
+                    res.json("Thank you for your feedback.");
+                })
+            }
+        })
+
+        .catch(function(err) {
+            if (err.name == "CastError" && err.kind == "ObjectId") {
+                res.send("Please use a valid ID.");
+            }
+        });
+})
+
 v1.post("/:_gameId/end", function(req, res) {
     var allowedUpdate = [ "end_date", "play_time", "ending", "filled_form" ];
     req.body = helper.sanitise(req.body);
@@ -108,7 +137,7 @@ v1.post("/:_gameId/end", function(req, res) {
                 return res.send("The provided Game Id does not exist in our database");
             } else {
 
-                GameData.updateData( _projectId, updatedObj, {}, function(err, doc) {
+                GameData.updateData( _gameId, updatedObj, {}, function(err, doc) {
 
                     if (err) {
                         throw err;

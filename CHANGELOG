@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+v 0.0.3.0810
+------------
+* Changes: Added support for processing list of choices.
+
+* Addition: Form data can be submitted now.
+
+* Removed: Removed formData and playData models.
+
 v 0.0.3.0806
 ------------
 * Changes: Sanitise user input.
