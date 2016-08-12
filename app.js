@@ -24,7 +24,7 @@ app.use(express.static(__dirname + "/public"));
 //Load the different routes
 app.use(require("./controllers"));
 
-// Custom Erro Handline
+// Custom Error handling
 app.use(function(req, res) {
    res.send('404: Page not Found', 404);
 });

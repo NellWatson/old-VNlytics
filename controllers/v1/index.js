@@ -27,7 +27,6 @@ v1.get("/project", function(req, res) {
 
 v1.post("/create", function(req, res) {
     var project = req.body;
-    console.log(req.body);
     
     ProjectsData.addProject(project, function (err, project) {
         if (err) {
