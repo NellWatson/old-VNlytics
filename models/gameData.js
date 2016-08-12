@@ -143,9 +143,12 @@ function createPipeline(field, query) {
                 "$match": query
             },
             {
+                "$unwind": "$play_data"
+            },
+            {
                 "$group": {
                     "_id": {
-                        value: "$data." + field
+                        value: "$play_data." + field
                     },
                     "count": {
                         "$sum": 1

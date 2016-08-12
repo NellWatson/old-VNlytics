@@ -8,4 +8,45 @@ Pre-Requisite
 
 Set Up
 ------
-Install MonogoDB and create 
+Running from your personal computer
+
+    Windows
+    -------
+    * Install nodejs from https://nodejs.org/en/download/ and MongoDB from https://www.mongodb.com/download-center
+    * Add MongoDB/server/3.2/bin folder to path.
+    * Restart explorer.
+    * Run node --version and mongo --version from commandline to make sure everything is set up correctly.
+    * Create data/db folder in C:/ directory.
+    * Open the command prompt and enter mongod. If everything is set up correctly, mongo should start.
+    * Download the source package from https://github.com/NellWatson/VNlytics/tarball/master and unzip it location of your choice.
+    * Open a command prompt window in the folder. (shift + right click, click on "Open Command window Here").
+    * Type "npm install" without quotes and press enter.
+    * After that, type "node app" without quotes.
+    * Once you see the text "server started on port 3000", navigate to http://localhost:3000
+
+    Mac
+    ---
+    * Install nodejs from https://nodejs.org/en/download/ and MongoDB from https://www.mongodb.com/download-center
+    * Run node --version and mongo --version from terminal to make sure everything is set up correctly.
+    * Open the terminal and enter mongod. If everything is set up correctly, mongo should start.
+    * Download the source package from https://github.com/NellWatson/VNlytics/tarball/master and unzip it location of your choice.
+    * Navigate inside the VNlytics folder from your terminal.
+    * Type "npm install" without quotes and press enter.
+    * After that, type "node app" without quotes.
+    * Once you see the text "server started on port 3000", navigate to http://localhost:3000
+
+    Linux
+    -----
+    * Install nodejs > sudo apt-get install nodejs
+    * Follow the instructions here to install MongoDB > https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+    * Run node --version and mongo --version from terminal to make sure everything is set up correctly.
+    * Open the terminal and enter mongod. If everything is set up correctly, mongo should start.
+    * Download the source package from https://github.com/NellWatson/VNlytics/tarball/master and unzip it location of your choice.
+    * Navigate inside the VNlytics folder from your terminal.
+    * Type "npm install" without quotes and press enter.
+    * After that, type "node app" without quotes.
+    * Once you see the text "server started on port 3000", navigate to http://localhost:3000
+
+Running from a linux server
+
+    * To-Do
