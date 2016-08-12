@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 
 // Connect to the MonogoDB database
 mongoose.connect("mongodb://localhost:27017/test")
-db = mongoose.conneection;
+db = mongoose.connection;
 
 // Where should we look for the static files
 app.use(express.static(__dirname + "/public"));

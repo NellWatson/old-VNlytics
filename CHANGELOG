@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+v 0.0.3.0812
+------------
+* Changes: Improved form submission.
+
+* Addition: Added flightplan module for easier deployment.
+
 v 0.0.3.0810
 ------------
 * Changes: Added support for processing list of choices.

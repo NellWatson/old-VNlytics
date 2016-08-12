@@ -96,7 +96,7 @@ v1.post("/:_gameId/form", function(req, res) {
 
     var _gameId = req.params._gameId;
 
-    helper.documentExists( GameData, { game_id: _gameId } )
+    helper.documentExists( GameData, { _id: _gameId } )
         .then(function(c) {
             if ( c == 0 ) {
                 return res.send("The provided Game Id does not exist in our database");
@@ -104,24 +104,28 @@ v1.post("/:_gameId/form", function(req, res) {
 
                 GameData.addFormData( _gameId, req.body, function(err, doc) {
 
-                    if (err) {
+                    if (err && err.name === "MongoError" && err.code === 11000) {
+                        res.send("This form has already been filled!");
+                    } else if (err) {
                         throw err;
                     };
 
-                    res.json("Thank you for your feedback.");
+                    if (doc) {
+                        res.json("Thank you for your feedback.");
+                    }
                 })
             }
         })
 
         .catch(function(err) {
-            if (err.name == "CastError" && err.kind == "ObjectId") {
+            if (err.name === "CastError" && err.kind === "ObjectId") {
                 res.send("Please use a valid ID.");
-            }
+            };
         });
 })
 
 v1.post("/:_gameId/end", function(req, res) {
-    var allowedUpdate = [ "end_date", "play_time", "ending", "filled_form" ];
+    var allowedUpdate = [ "play_time", "ending", "filled_form" ];
     req.body = helper.sanitise(req.body);
 
     var _gameId = req.params._gameId;
@@ -130,6 +134,8 @@ v1.post("/:_gameId/end", function(req, res) {
     if ( helper.isEmpty(updatedObj) ) {
         return res.send("Please send data to be updated with your request.");
     }
+
+    updatedObj["end_date"] = new Date().toISOString();
 
     helper.documentExists( GameData, { _id: _gameId } )
         .then(function(c) {
@@ -143,7 +149,7 @@ v1.post("/:_gameId/end", function(req, res) {
                         throw err;
                     };
 
-                    res.json(_gameId + "is marked as finish.");
+                    res.json(_gameId + "is marked as finished.");
                 })
             }
         })

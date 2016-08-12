@@ -40,7 +40,8 @@ var gameDataSchema = mongoose.Schema({
         default: false
     },
     filled_form: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     form_data: {
         art: {
@@ -75,16 +76,13 @@ var gameDataSchema = mongoose.Schema({
             type: String
         },
         age_group: {
-            type: String,
-            default: "None"
+            type: String
         },
         gender: {
-            type: String,
-            default: "None"
+            type: String
         },
         parting_words: {
-            type: String,
-            default: "None"
+            type: String
         },
         extra_questions: {
             type: mongoose.Schema.Types.Mixed
@@ -193,7 +191,7 @@ module.exports.aggregateData = function( field, query, callback ) {
 };
 
 module.exports.addFormData = function( gameId, formObj, callback) {
-    var query = { _id: gameId };
+    var query = { _id: gameId, filled_form: false };
     var update = { $set: { "filled_form": true, "form_data": formObj } };
     var options = { upsert: true };
 
