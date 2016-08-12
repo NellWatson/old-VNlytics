@@ -75,7 +75,9 @@ v1.post("/:_gameId", function(req, res) {
 
                 GameData.updatePlayData( _gameId, postObj, function(err, doc) {
                     
-                    if (err) {
+                    if (err && err.name === "MongoError" && err.code === 11000) {
+                        res.send("This game entry has already been filled!");
+                    } else if (err) {
                         throw err;
                     };
 

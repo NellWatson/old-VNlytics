@@ -4,6 +4,7 @@ CHANGELOG
 v 0.0.3.0812
 ------------
 * Changes: Improved form submission.
+* Changes: Block update of game sessions marked as finished.
 
 * Addition: Added flightplan module for easier deployment.
 

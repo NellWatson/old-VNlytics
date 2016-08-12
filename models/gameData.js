@@ -173,7 +173,7 @@ module.exports.updateData = function(gameId, updatedObj, options, callback) {
 };
 
 module.exports.updatePlayData = function(gameId, updatedObj, callback) {
-    var query = { _id: gameId };
+    var query = { _id: gameId, end_date: {"$exists": false} };
     var update = { $push: { "play_data": updatedObj } };
     var options = { $safe: true, upsert: true, new: true };
 
