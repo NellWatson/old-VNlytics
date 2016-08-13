@@ -119,6 +119,8 @@ v1.post("/:_gameId", function(req, res) {
         .catch(function(err) {
             if (err.name == "CastError" && err.kind == "ObjectId") {
                 res.send("Please use a valid ID");
+            } else {
+                throw err;
             }
         });
 });
@@ -152,7 +154,9 @@ v1.post("/:_gameId/form", function(req, res) {
         .catch(function(err) {
             if (err.name === "CastError" && err.kind === "ObjectId") {
                 res.send("Please use a valid ID.");
-            };
+            } else {
+                throw err;
+            }
         });
 })
 
@@ -192,6 +196,8 @@ v1.post("/:_gameId/end", function(req, res) {
         .catch(function(err) {
             if (err.name == "CastError" && err.kind == "ObjectId") {
                 res.send("Please use a valid ID.");
+            } else {
+                throw err;
             }
         });
 })
