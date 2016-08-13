@@ -35,6 +35,7 @@ v1.get("/:_projectId", function(req, res) {
         if (! doc) {
             return res.send("This Project does not exist")
         };
+
         res.json(doc.title + " was found in our records.");
     })
 });
@@ -60,19 +61,20 @@ v1.put("/:_projectId", function(req, res) {
             return res.send("This Project does not exist")
         };
         res.json(doc.title + " was found in our records.");
+
     })
 });
 
 // Send back the stats related to the game
 v1.get("/:_projectId/stats", function(req, res) {
     ProjectsData.count( {engine: "Ren'Py"}, function(err, doc) {
-        console.log('Count is ' + doc);
         res.send(doc + " count");
     })
 });
 
 v1.get("/:_projectId/:_queryKey", function(req, res) {
     var _field = req.params._queryKey;
+    
     req.query = helper.sanitise(req.query);
     req.query.project_id = req.params._projectId;
 

@@ -35,6 +35,9 @@ var gameDataSchema = mongoose.Schema({
     ending: {
         type: String
     },
+    final_game_pass: {
+        type: Number
+    },
     multiple_ids: {
         type: Boolean,
         default: false
@@ -72,16 +75,19 @@ var gameDataSchema = mongoose.Schema({
         favourite_chara: {
             type: String
         },
-        least_fun: {
+        not_liked: {
+            type: String
+        },
+        liked: {
+            type: String
+        },
+        improvement: {
             type: String
         },
         age_group: {
             type: String
         },
         gender: {
-            type: String
-        },
-        parting_words: {
             type: String
         },
         extra_questions: {
@@ -123,17 +129,17 @@ function createPipeline(field, query) {
             {
                 "$group": {
                     "_id": "$_id.label",
-                    "Choices": { 
+                    "choices": { 
                         "$push": {
-                            "Caption": "$_id.caption",
-                            "Count": "$count"
+                            "caption": "$_id.caption",
+                            "count": "$count"
                         }
                     }
                 }
             },
             {
                 "$project": {
-                    "_id": 0, "Label": "$_id", "Choices": 1
+                    "_id": 0, "label": "$_id", "choices": 1
                 }
             }
         ];

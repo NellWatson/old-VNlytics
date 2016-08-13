@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v 0.0.4.0813
+------------
+* Changes: Allow players to get lay data of a single session.
+
 v 0.0.3.0812
 ------------
 * Changes: Improved form submission.

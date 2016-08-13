@@ -7,11 +7,17 @@ var ProjectsData = require("../../models/projects");
     GameData = require("../../models/gameData");
 
 // Use the bodyParser module for parsing response
-v1.use(bodyParser.urlencoded({ extended: false }));
+v1.use( bodyParser.urlencoded({ extended: false }) );
+
+v1.use("/:_projectId", function(req, res, next) {
+
+    // Store the value of project id
+    req.project_id = req.params._projectId;
+    next();
+});
 
 v1.get("/stats", function(req, res) {
     ProjectsData.count( {}, function(err, c) {
-        console.log('Count is ' + c);
         res.send(c + " Project(s) are registered with the site.");
     })
 });
@@ -32,6 +38,7 @@ v1.post("/create", function(req, res) {
         if (err) {
             throw err;
         };
+
         res.json(project);
     })
 });
