@@ -104,7 +104,7 @@ var gameDataSchema = mongoose.Schema({
 var GameData = module.exports = mongoose.model("gameData", gameDataSchema);
 
 function createPipeline(field, query) {
-    if ( field == "choices" ) {
+    if ( field === "choices" ) {
         return [
             {
                 "$match": query
@@ -140,6 +140,20 @@ function createPipeline(field, query) {
             {
                 "$project": {
                     "_id": 0, "label": "$_id", "choices": 1
+                }
+            }
+        ];
+    } else if ( [ "platform", "display_render", "display_size" ].indexOf(field) > -1 ) {
+        return [
+            {
+                "$match": query
+            },
+            {
+                "$group": {
+                    "_id": "$" + field,
+                    "count": {
+                        "$sum": 1
+                    }
                 }
             }
         ];

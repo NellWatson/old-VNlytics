@@ -66,9 +66,32 @@ v1.put("/:_projectId", function(req, res) {
 });
 
 // Send back the stats related to the game
-v1.get("/:_projectId/stats", function(req, res) {
-    ProjectsData.count( {engine: "Ren'Py"}, function(err, doc) {
-        res.send(doc + " count");
+v1.get("/:_projectId/platform", function(req, res) {
+    var _query = { project_id: req.params._projectId };
+    var _field = "platform";
+    
+    req.query = helper.sanitise(req.query);
+
+    if ( "unique" in req.query ) {
+        _query.multiple_ids = false;
+    }
+
+    if ( "render" in req.query ) {
+        _query.display_render = req.query.renderer;
+    }
+    
+    if ( "resolution" in req.query ) {
+        if ( req.query.resolution === "full hd" ) {
+            _query.display_size = "(1920, 1080)";
+        } else if ( req.query.resolution === "hd" ) {
+            _query.display_size = "(1280, 720)";
+        } else {
+            _query.display_size = req.query.resolution;
+        }
+    }
+
+    GameData.aggregateData( _field, _query, function(err, doc) {
+        res.send(doc);
     })
 });
 

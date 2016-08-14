@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v 0.0.4.0814
+------------
+* Changes: Allow filtering of global project stats.
+* Changes: Renamed stats page to platform. So new url should be /project_id/platform
+
 v 0.0.4.0813
 ------------
 * Changes: Allow players to get lay data of a single session.
