@@ -98,7 +98,14 @@ var gameDataSchema = mongoose.Schema({
         {
             type: mongoose.Schema.Types.Mixed
         }
-    ]
+    ],
+    game_mechanics: {
+        mail_system: [],
+        job_system: [],
+        travel_system: [],
+        to_do_system: [],
+        general: []
+    }
 });
 
 var GameData = module.exports = mongoose.model("gameData", gameDataSchema);
@@ -201,6 +208,17 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
         end_date: {"$exists": false}
     };
     var update = { $push: { "play_data": updatedObj } };
+    var options = { $safe: true, upsert: true, new: true };
+
+    GameData.findOneAndUpdate(query, update, options, callback);
+};
+
+module.exports.updateMechanicsData = function(gameId, field, data, callback) {
+    var query = {
+        _id: gameId,
+        end_date: {"$exists": false}
+    };
+    var update = { $push: { ["game_mechanics." + field]: data } };
     var options = { $safe: true, upsert: true, new: true };
 
     GameData.findOneAndUpdate(query, update, options, callback);

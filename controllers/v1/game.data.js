@@ -49,8 +49,6 @@ v1.get("/:_gameId/get", function(req, res) {
             return res.send("This Game ID does not exist")
         };
 
-        console.log(req.project_id)
-
         res.json(doc.play_data);
     })
 });
@@ -130,7 +128,7 @@ v1.post("/:_gameId/form", function(req, res) {
 
     var _gameId = req.params._gameId;
 
-    helper.documentExists( GameData, { _id: _gameId } )
+    helper.documentExists( GameData, { _id: _gameId, project_id: req._projectId } )
         .then(function(c) {
             if ( c == 0 ) {
                 return res.send("The provided Game Id does not exist in our database");
@@ -138,11 +136,15 @@ v1.post("/:_gameId/form", function(req, res) {
 
                 GameData.addFormData( _gameId, req.body, function(err, doc) {
 
-                    if (err && err.name === "MongoError" && err.code === 11000) {
-                        res.send("This form has already been filled!");
-                    } else if (err) {
-                        throw err;
-                    };
+                    if (err) {
+                        if (err.name === "MongoError" && err.code === 11000) {
+                            res.send("This session has already been finished!");
+                        } else if (err.name === "MongoError" && err.code === 9) {
+                            res.send("Please provide valid data!");
+                        } else {
+                            throw err
+                        };
+                    }
 
                     if (doc) {
                         res.json("Thank you for your feedback.");
@@ -158,7 +160,49 @@ v1.post("/:_gameId/form", function(req, res) {
                 throw err;
             }
         });
-})
+});
+
+v1.post("/:_gameId/feedback", function(req, res) {
+    req.body = helper.sanitise(req.body);
+
+    var _gameId = req.params._gameId;
+    var _field = req.body.field;
+    var _data = req.body.data;
+
+    helper.documentExists( GameData, { _id: _gameId, project_id: req._projectId } )
+        .then(function(c) {
+            if ( c == 0 ) {
+                return res.send("The provided Game Id does not exist in our database");
+            } else {
+
+                GameData.updateMechanicsData( _gameId, _field, _data, function(err, doc) {
+
+                    if (err) {
+                        if (err.name === "MongoError" && err.code === 11000) {
+                            res.send("This session has already been finished!");
+                        } else if (err.name === "MongoError" && err.code === 9) {
+                            res.send("Please provide valid data!");
+                        } else {
+                            throw err
+                        };
+                    };
+
+                    if (doc) {
+                        res.json("Thank you for your feedback.");
+                    };
+                })
+            }
+        })
+
+        .catch(function(err) {
+            if (err.name === "CastError" && err.kind === "ObjectId") {
+                res.send("Please use a valid ID.");
+            } else {
+                throw err;
+            }
+        });
+
+});
 
 v1.post("/:_gameId/end", function(req, res) {
     var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass" ];
@@ -200,6 +244,6 @@ v1.post("/:_gameId/end", function(req, res) {
                 throw err;
             }
         });
-})
+});
 
 module.exports = v1;

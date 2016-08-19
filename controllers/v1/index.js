@@ -12,7 +12,7 @@ v1.use( bodyParser.urlencoded({ extended: false }) );
 v1.use("/:_projectId", function(req, res, next) {
 
     // Store the value of project id
-    req.project_id = req.params._projectId;
+    req._projectId = req.params._projectId;
     next();
 });
 
