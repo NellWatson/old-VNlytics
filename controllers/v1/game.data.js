@@ -36,8 +36,6 @@ v1.get("/:_gameId", function(req, res) {
 v1.get("/:_gameId/get", function(req, res) {
     var _gameId = req.params._gameId;
 
-    console.log("Check");
-
     GameData.byId( { _id: _gameId }, function (err, doc) {
         
         if (err) {
@@ -117,6 +115,44 @@ v1.post("/:_gameId", function(req, res) {
         .catch(function(err) {
             if (err.name == "CastError" && err.kind == "ObjectId") {
                 res.send("Please use a valid ID");
+            } else {
+                throw err;
+            }
+        });
+});
+
+v1.post("/:_gameId/update", function(req, res) {
+    var allowedUpdate = [ "founder_name", "founder_startup" ];
+    req.body = helper.sanitise(req.body);
+
+    var _gameId = req.params._gameId;
+    var updatedObj = helper.validatePost( allowedUpdate, req.body );
+
+    if ( helper.isEmpty(updatedObj) ) {
+        return res.send("Please send data to be updated with your request.");
+    };
+
+    helper.documentExists( GameData, { _id: _gameId } )
+        .then(function(c) {
+            if ( c == 0 ) {
+                return res.send("The provided Game Id does not exist in our database");
+            } else {
+
+                GameData.updateData( _gameId, updatedObj, {}, function(err, doc) {
+
+                    if (err) {
+                        console.log(err.name);
+                        throw err;
+                    };
+
+                    res.json(_gameId + " is marked as finished.");
+                })
+            }
+        })
+
+        .catch(function(err) {
+            if (err.name == "CastError" && err.kind == "ObjectId") {
+                res.send("Please use a valid ID.");
             } else {
                 throw err;
             }
@@ -205,17 +241,19 @@ v1.post("/:_gameId/feedback", function(req, res) {
 });
 
 v1.post("/:_gameId/end", function(req, res) {
-    var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass" ];
+    var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass", "money_in_hand", "completion_days" ];
     req.body = helper.sanitise(req.body);
+
+    console.log(updatedObj);
 
     var _gameId = req.params._gameId;
     var updatedObj = helper.validatePost( allowedUpdate, req.body );
 
     if ( helper.isEmpty(updatedObj) ) {
         return res.send("Please send data to be updated with your request.");
-    }
+    };
 
-    console.log("Check");
+    console.log(updatedObj);
 
     updatedObj["end_date"] = new Date().toISOString();
 
@@ -228,7 +266,6 @@ v1.post("/:_gameId/end", function(req, res) {
                 GameData.updateData( _gameId, updatedObj, {}, function(err, doc) {
 
                     if (err) {
-                        console.log(err.name);
                         throw err;
                     };
 

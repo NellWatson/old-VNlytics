@@ -28,13 +28,6 @@ var gameDataSchema = mongoose.Schema({
     sessions: {
         type: Number
     },
-    play_time: {
-        type: Number,
-        default: 0
-    },
-    ending: {
-        type: String
-    },
     final_game_pass: {
         type: Number
     },
@@ -45,6 +38,21 @@ var gameDataSchema = mongoose.Schema({
     filled_form: {
         type: Boolean,
         default: false
+    },
+    ending: {
+        type: String
+    },
+    money_in_hand: {
+        type: Number
+    },
+    completion_days: {
+        type: Number
+    },
+    founder_name: {
+        type: String
+    },
+    founder_startup: {
+        type:String,
     },
     form_data: {
         art: {
@@ -161,6 +169,28 @@ function createPipeline(field, query) {
                     "count": {
                         "$sum": 1
                     }
+                }
+            }
+        ];
+    } else if ( field === "stats" ) {
+        return [
+            {
+                "$match": query
+            },
+            {
+                "$group": {
+                    "_id": "completion_days",
+                    "count_days": {
+                        "$avg": "$completion_days",
+                    },
+                    "count_money": {
+                        "$avg": "$money_in_hand"
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0, "count_money": 1, "count_days": 1
                 }
             }
         ];
