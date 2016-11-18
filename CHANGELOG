@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+v 0.0.4.1118
+------------
+* Changes: Return a dict with 0 values if there is no vaue to return.
+* Changes: Updated the gamedata model to accomodate the new fields.
+* Changes: For the time being, show all the data collected for a particular playthrough in /game_id/get.
+
 v 0.0.4.0819
 ------------
 * Addition: Support for "FL" specific mechanics feedback.

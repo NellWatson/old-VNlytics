@@ -55,33 +55,30 @@ var gameDataSchema = mongoose.Schema({
         type:String,
     },
     form_data: {
-        art: {
+        overall: {
             type: Number,
             min: 0,
-            max: 10
+            max: 2
         },
-        sound: {
+        ease: {
             type: Number,
             min: 0,
-            max: 10
-        },
-        writing: {
-            type: Number,
-            min: 0,
-            max: 10
+            max: 2
         },
         gameplay: {
             type: Number,
             min: 0,
-            max: 10
+            max: 2
         },
-        overall: {
+        graphics: {
             type: Number,
             min: 0,
-            max: 10
+            max: 2
         },
-        favourite_chara: {
-            type: String
+        sound: {
+            type: Number,
+            min: 0,
+            max: 2
         },
         not_liked: {
             type: String
@@ -92,10 +89,13 @@ var gameDataSchema = mongoose.Schema({
         improvement: {
             type: String
         },
-        age_group: {
+        confusing_parts: {
             type: String
         },
-        gender: {
+        player_changes: {
+            type: String
+        },
+        email: {
             type: String
         },
         extra_questions: {

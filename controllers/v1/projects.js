@@ -100,7 +100,12 @@ v1.get("/:_projectId/stats", function(req, res) {
     var _field = "stats";
 
     GameData.aggregateData( _field, _query, function(err, doc) {
-        res.send(doc[0]);
+
+        if ( doc.length == 0 ) {
+            res.json( {"count_days": 0, "count_money": 0} )
+        } else {
+            res.send(doc[0]);
+        }
     })
 });
 
@@ -117,7 +122,7 @@ v1.get("/:_projectId/:_queryKey", function(req, res) {
         };
 
         if ( project.length == 0 ) {
-            res.send("No data found.");
+            next();
         } else {
             res.json(project);
         }
