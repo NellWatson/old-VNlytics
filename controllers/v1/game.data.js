@@ -47,7 +47,7 @@ v1.get("/:_gameId/get", function(req, res) {
             return res.send("This Game ID does not exist")
         };
 
-        res.json(doc.play_data);
+        res.json(doc);
     })
 });
 
@@ -244,16 +244,12 @@ v1.post("/:_gameId/end", function(req, res) {
     var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass", "money_in_hand", "completion_days" ];
     req.body = helper.sanitise(req.body);
 
-    console.log(updatedObj);
-
     var _gameId = req.params._gameId;
     var updatedObj = helper.validatePost( allowedUpdate, req.body );
 
     if ( helper.isEmpty(updatedObj) ) {
         return res.send("Please send data to be updated with your request.");
     };
-
-    console.log(updatedObj);
 
     updatedObj["end_date"] = new Date().toISOString();
 
