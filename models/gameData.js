@@ -194,6 +194,38 @@ function createPipeline(field, query) {
                 }
             }
         ];
+    } else if ( field === "summary" ) {
+        return [
+            {
+                "$match": query
+            },
+            {
+                "$group": {
+                    "_id": "_id",
+                    "Feedback Data": {
+                        "$push": {
+                            "Player ID": "$_id",
+                            "Overall Experience": "$form_data.overall",
+                            "Ease of Use": "$form_data.ease",
+                            "Gameplay": "$form_data.gameplay",
+                            "Graphics": "$form_data.graphics",
+                            "Sound": "$form_data.sound",
+                            "What did you like about Founder Life?": "$form_data.liked",
+                            "What did you dislike about Founder Life?": "$form_data.not_liked",
+                            "If you could change one thing in the game, what would it be?": "$form_data.improvement",
+                            "Was there any point where you were confused by what was happening?": "$form_data.confusing_parts",
+                            "What, if anything, would have to change before you played Founder Life again?": "$form_data.player_changes",
+                            "Email": "$form_data.email"
+                        }
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0, "Feedback Data": 1
+                }
+            }
+        ];
     } else {
         return [
             {

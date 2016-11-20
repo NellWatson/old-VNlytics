@@ -109,6 +109,22 @@ v1.get("/:_projectId/stats", function(req, res) {
     })
 });
 
+v1.get("/:_projectId/summary", function(req, res) {
+    var _query = { project_id: req.params._projectId, filled_form: true };
+    var _field = "summary";
+
+    GameData.aggregateData( _field, _query, function(err, doc) {
+
+        if ( doc.length == 0 ) {
+            res.json({
+                "message": "No Data to display"
+            });
+        } else {
+            res.send(doc[0]["Feedback Data"]);
+        }
+    })
+});
+
 v1.get("/:_projectId/:_queryKey", function(req, res) {
     var _field = req.params._queryKey;
     
@@ -122,7 +138,9 @@ v1.get("/:_projectId/:_queryKey", function(req, res) {
         };
 
         if ( project.length == 0 ) {
-            next();
+            res.json({
+                "message": "No Data to display"
+            });
         } else {
             res.json(project);
         }
