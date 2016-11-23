@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v 0.0.4.1124
+------------
+* Changes: Support syncing of per session playtime.
+
 v 0.0.4.1120
 ------------
 * Addition: /summary page added

@@ -28,6 +28,8 @@ var gameDataSchema = mongoose.Schema({
     sessions: {
         type: Number
     },
+    sessions_length: [
+    ],
     final_game_pass: {
         type: Number
     },
@@ -215,7 +217,12 @@ function createPipeline(field, query) {
                             "If you could change one thing in the game, what would it be?": "$form_data.improvement",
                             "Was there any point where you were confused by what was happening?": "$form_data.confusing_parts",
                             "What, if anything, would have to change before you played Founder Life again?": "$form_data.player_changes",
-                            "Email": "$form_data.email"
+                            "Email": "$form_data.email",
+                            "Mail": "$game_mechanics.mail_system",
+                            "Job": "$game_mechanics.job_system",
+                            "Travel": "$game_mechanics.travel_system",
+                            "To Do": "$game_mechanics.to_do_system",
+                            "General": "$game_mechanics.general"
                         }
                     }
                 }
@@ -269,7 +276,12 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
         _id: gameId,
         end_date: {"$exists": false}
     };
-    var update = { $push: { "play_data": updatedObj } };
+
+    if ("sessions_length" in updatedObj) {
+        var update = { $push: updatedObj };
+    } else {
+        var update = { $push: { "play_data": updatedObj } };
+    };
     var options = { $safe: true, upsert: true, new: true };
 
     GameData.findOneAndUpdate(query, update, options, callback);
