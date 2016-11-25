@@ -109,6 +109,34 @@ var gameDataSchema = mongoose.Schema({
             type: mongoose.Schema.Types.Mixed
         }
     ],
+    freelance: {
+            game_pass: {
+                type: Number
+            },
+            name: {
+                type: String
+            },
+            status: {
+                type: String
+            },
+            date: {
+                type: String
+            }
+    },
+    startup: {
+            game_pass: {
+                type: Number
+            },
+            name: {
+                type: String
+            },
+            status: {
+                type: String
+            },
+            date: {
+                type: String
+            }
+    },
     game_mechanics: {
         mail_system: [],
         job_system: [],
@@ -233,6 +261,42 @@ function createPipeline(field, query) {
                 }
             }
         ];
+    } else if ( field === "player" ) {
+        return [
+            {
+                "$match": query
+            },
+            {
+                "$unwind": "$play_data"
+            },
+            {
+                "$group": {
+                    "_id": {
+                        "name": "$play_data.freelance.name",
+                        "status": "$play_data.freelance.status"
+                    },
+                    "count": {
+                        "$sum": 1,
+                    }
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$_id.name",
+                    "status": { 
+                        "$push": {
+                            "status": "$_id.status",
+                            "count": "$count"
+                        }
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0, "name": "$_id", "status": 1
+                }
+            }
+        ];
     } else {
         return [
             {
@@ -277,7 +341,11 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
         end_date: {"$exists": false}
     };
 
-    if ("sessions_length" in updatedObj) {
+    if ( updatedObj["type"] === "freelance" ) {
+        var update = { $addToSet: { "freelance": updatedObj["data"] } };
+    } else if ( updatedObj["type"] === "startup" ) {
+        var update = { $addToSet: { "startup": updatedObj["data"] } };
+    } else if ("sessions_length" in updatedObj) {
         var update = { $push: updatedObj };
     } else {
         var update = { $push: { "play_data": updatedObj } };
