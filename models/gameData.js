@@ -285,7 +285,7 @@ function createPipeline(field, query) {
                     },
                     "Total Users -- Single Session": {
                         "$sum": {
-                            "$cond": [ { "$eq": [ "$sessions", 0 ] }, 1, 0 ]
+                            "$cond": [ { "$eq": [ "$sessions", 1 ] }, 1, 0 ]
                         }
                     },
                     "Total Users -- Multi Session": {
