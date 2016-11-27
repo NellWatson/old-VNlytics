@@ -125,6 +125,22 @@ v1.get("/:_projectId/summary", function(req, res) {
     })
 });
 
+v1.get("/:_projectId/player", function(req, res) {
+    var _query = { project_id: req.params._projectId };
+    var _field = "player";
+
+    GameData.aggregateData( _field, _query, function(err, doc) {
+
+        if ( doc.length == 0 ) {
+            res.json({
+                "message": "No Data to display"
+            });
+        } else {
+            res.send(doc[0]);
+        }
+    })
+});
+
 v1.get("/:_projectId/:_queryKey", function(req, res) {
     var _field = req.params._queryKey;
     

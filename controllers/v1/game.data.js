@@ -241,7 +241,7 @@ v1.post("/:_gameId/feedback", function(req, res) {
 });
 
 v1.post("/:_gameId/end", function(req, res) {
-    var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass", "money_in_hand", "completion_days" ];
+    var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass", "money_in_hand", "completion_days", "final session" ];
     req.body = helper.sanitise(req.body);
 
     var _gameId = req.params._gameId;

@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v 0.0.4.1127
+------------
+* Addition: /player page added
+
 v 0.0.4.1125
 ------------
 * Changes: Seperate field for freelance, startup data is supported now.

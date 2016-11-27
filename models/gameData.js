@@ -26,7 +26,8 @@ var gameDataSchema = mongoose.Schema({
         type: Date
     },
     sessions: {
-        type: Number
+        type: Number,
+        default: 1
     },
     sessions_length: [
     ],
@@ -211,7 +212,7 @@ function createPipeline(field, query) {
                 "$group": {
                     "_id": "completion_days",
                     "count_days": {
-                        "$avg": "$completion_days",
+                        "$avg": "$completion_days"
                     },
                     "count_money": {
                         "$avg": "$money_in_hand"
@@ -267,33 +268,42 @@ function createPipeline(field, query) {
                 "$match": query
             },
             {
-                "$unwind": "$play_data"
-            },
-            {
-                "$group": {
-                    "_id": {
-                        "name": "$play_data.freelance.name",
-                        "status": "$play_data.freelance.status"
-                    },
-                    "count": {
-                        "$sum": 1,
-                    }
+                "$unwind": {
+                    "path": "$sessions_length"
                 }
             },
             {
                 "$group": {
-                    "_id": "$_id.name",
-                    "status": { 
-                        "$push": {
-                            "status": "$_id.status",
-                            "count": "$count"
+                    "_id": "_id",
+                    "Total Play": {
+                        "$sum": 1
+                    },
+                    "Total Unique Users": {
+                        "$sum": {
+                            "$cond": [ { "$eq": [ "$multiple_ids", false ] }, 1, 0 ]
                         }
+                    },
+                    "Total Users -- Single Session": {
+                        "$sum": {
+                            "$cond": [ { "$eq": [ "$sessions", 0 ] }, 1, 0 ]
+                        }
+                    },
+                    "Total Users -- Multi Session": {
+                        "$sum": {
+                            "$cond": [ { "$gt": [ "$sessions", 1 ] }, 1, 0 ]
+                        }
+                    },
+                    "Total Sessions": {
+                        "$sum": "$sessions"
+                    },
+                    "Average Session Length": {
+                        "$avg": "$sessions_length"
                     }
                 }
             },
             {
                 "$project": {
-                    "_id": 0, "name": "$_id", "status": 1
+                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average Session Length": 1
                 }
             }
         ];
@@ -330,7 +340,10 @@ module.exports.getData = function(callback, limit) {
 
 module.exports.updateData = function(gameId, updatedObj, options, callback) {
     var query = { _id: gameId };
-    var update = { $set: updatedObj };
+    var update = {
+        $set: updatedObj,
+        $push: { "sessions_length": updatedObj["final session"] }
+    };
 
     GameData.findOneAndUpdate(query, update, options, callback);
 };
@@ -346,7 +359,10 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
     } else if ( updatedObj["type"] === "startup" ) {
         var update = { $addToSet: { "startup": updatedObj["data"] } };
     } else if ("sessions_length" in updatedObj) {
-        var update = { $push: updatedObj };
+        var update = {
+            $push: updatedObj,
+            $inc: { "sessions": 1 }
+        };
     } else {
         var update = { $push: { "play_data": updatedObj } };
     };
