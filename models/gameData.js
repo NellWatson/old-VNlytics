@@ -27,7 +27,7 @@ var gameDataSchema = mongoose.Schema({
     },
     sessions: {
         type: Number,
-        default: 1
+        default: 0
     },
     sessions_length: [
     ],
@@ -298,12 +298,22 @@ function createPipeline(field, query) {
                     },
                     "Average Session Length": {
                         "$avg": "$sessions_length"
+                    },
+                    "Users who completed FP": {
+                        "$sum": {
+                            "$cond": [ { "$eq": [ "$ending", "None" ] }, 1, 0 ]
+                        }
+                    },
+                    "Users who did not complete FP": {
+                        "$sum": {
+                            "$cond": [ { "$ne": [ "$ending", "None" ] }, 1, 0 ]
+                        }
                     }
                 }
             },
             {
                 "$project": {
-                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average Session Length": 1
+                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
                 }
             }
         ];
@@ -342,7 +352,8 @@ module.exports.updateData = function(gameId, updatedObj, options, callback) {
     var query = { _id: gameId };
     var update = {
         $set: updatedObj,
-        $push: { "sessions_length": updatedObj["final session"] }
+        $push: { "sessions_length": updatedObj["final session"] },
+        $inc: { "sessions": 1 }
     };
 
     GameData.findOneAndUpdate(query, update, options, callback);
