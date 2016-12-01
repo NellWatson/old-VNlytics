@@ -73,6 +73,11 @@ var gameDataSchema = mongoose.Schema({
             min: 0,
             max: 2
         },
+        story: {
+            type: Number,
+            min: 0,
+            max: 2
+        },
         graphics: {
             type: Number,
             min: 0,
@@ -82,6 +87,9 @@ var gameDataSchema = mongoose.Schema({
             type: Number,
             min: 0,
             max: 2
+        },
+        narrative: {
+            type: String
         },
         not_liked: {
             type: String
@@ -111,32 +119,46 @@ var gameDataSchema = mongoose.Schema({
         }
     ],
     freelance: {
-            game_pass: {
-                type: Number
-            },
-            name: {
-                type: String
-            },
-            status: {
-                type: String
-            },
-            date: {
-                type: String
-            }
+        game_pass: {
+            type: Number
+        },
+        name: {
+            type: String
+        },
+        status: {
+            type: String
+        },
+        date: {
+            type: String
+        }
     },
     startup: {
-            game_pass: {
-                type: Number
-            },
-            name: {
-                type: String
-            },
-            status: {
-                type: String
-            },
-            date: {
-                type: String
-            }
+        game_pass: {
+            type: Number
+        },
+        name: {
+            type: String
+        },
+        status: {
+            type: String
+        },
+        date: {
+            type: String
+        }
+    },
+    choices: {
+        game_pass: {
+            type: Number
+        },
+        label: {
+            type: String
+        },
+        status: {
+            type: String
+        },
+        date: {
+            type: String
+        }
     },
     game_mechanics: {
         mail_system: [],
@@ -239,8 +261,10 @@ function createPipeline(field, query) {
                             "Overall Experience": "$form_data.overall",
                             "Ease of Use": "$form_data.ease",
                             "Gameplay": "$form_data.gameplay",
+                            "Story": "$form_data.story",
                             "Graphics": "$form_data.graphics",
                             "Sound": "$form_data.sound",
+                            "How did you like the overall story and dialogues?": "$form_data.narrative",
                             "What did you like about Founder Life?": "$form_data.liked",
                             "What did you dislike about Founder Life?": "$form_data.not_liked",
                             "If you could change one thing in the game, what would it be?": "$form_data.improvement",
@@ -369,6 +393,8 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
         var update = { $addToSet: { "freelance": updatedObj["data"] } };
     } else if ( updatedObj["type"] === "startup" ) {
         var update = { $addToSet: { "startup": updatedObj["data"] } };
+    } else if ( updatedObj["type"] === "choices" ) {
+        var update = { $addToSet: { "choices": updatedObj["data"] } };
     } else if ("sessions_length" in updatedObj) {
         var update = {
             $push: updatedObj,

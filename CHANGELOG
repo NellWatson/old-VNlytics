@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+v 0.0.4.1201
+------------
+* Changes: Support seperate field for storing choices.
+* Changes: Extend Feedback collection.
+
 v 0.0.4.1128
 ------------
 * Addition: /player page improvements
