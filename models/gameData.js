@@ -91,10 +91,16 @@ var gameDataSchema = mongoose.Schema({
         narrative: {
             type: String
         },
-        not_liked: {
+        dialogue: {
+            type: String
+        },
+        character: {
             type: String
         },
         liked: {
+            type: String
+        },
+        not_liked: {
             type: String
         },
         improvement: {
@@ -264,7 +270,9 @@ function createPipeline(field, query) {
                             "Story": "$form_data.story",
                             "Graphics": "$form_data.graphics",
                             "Sound": "$form_data.sound",
-                            "How did you like the overall story and dialogues?": "$form_data.narrative",
+                            "What do you think about the overall story?": "$form_data.narrative",
+                            "How did you find the in-game dialogues?": "$form_data.dialogue",
+                            "What are your views on the character? Did you find them believable?": "$form_data.character",
                             "What did you like about Founder Life?": "$form_data.liked",
                             "What did you dislike about Founder Life?": "$form_data.not_liked",
                             "If you could change one thing in the game, what would it be?": "$form_data.improvement",
