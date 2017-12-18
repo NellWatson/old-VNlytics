@@ -1,6 +1,4 @@
 var v1 = require("express").Router();
-    bodyParser = require("body-parser");
-    morgan = require("morgan");
 
 // Load the models
 var ProjectsData = require("../../models/projects");

@@ -1,66 +1,17 @@
 // Loading the modules
 var router = require("express").Router();
-    bodyParser = require("body-parser");
 
 // Load the models
 var ProjectsData = require("../models/projects");
     GameData = require("../models/gameData");
 
 // Test intialisation of Founders Life Project.
-router.get("/create/new/project/founder_life/first_run", function(req, res) {
-
-    // This is the default project.
-    var project = {
-        "project_id": "FoundersLifeTest",
-        "title": "Founders Life",
-        "developer": "Nell Works",
-        "engine": "Ren'Py"
-        };
-    
-    ProjectsData.addProject(project, function (err, project) {
-        if (err) {
-            // If the Project Id already exists, inform the user
-            if (err.name == "MongoError" && err.code == 11000) {
-                return res.send({ succes: false, message: 'User already exist!' });
-            }
-            throw err;
-        };
-
-        res.json(project);
-    })
-});
-
-// intialisation of Founders Life Project.
-router.get("/create/new/project/founder_life/first_run/alpha/run", function(req, res) {
+router.get("/create/new/project/founder_life/mvp/setup", function(req, res) {
 
     // This is the default project.
     var project = {
         "project_id": "FoundersLifeAlpha",
         "title": "Founders Life",
-        "developer": "Nell Watson",
-        "engine": "Ren'Py"
-        };
-    
-    ProjectsData.addProject(project, function (err, project) {
-        if (err) {
-            // If the Project Id already exists, inform the user
-            if (err.name == "MongoError" && err.code == 11000) {
-                return res.send({ succes: false, message: 'User already exist!' });
-            }
-            throw err;
-        };
-
-        res.json(project);
-    })
-});
-
-// intialisation of Founders Life Project.
-router.get("/create/new/project/test/first_run/", function(req, res) {
-
-    // This is the default project.
-    var project = {
-        "project_id": "TestGame",
-        "title": "Telemetry Test",
         "developer": "Nell Watson",
         "engine": "Ren'Py"
         };
