@@ -109,9 +109,11 @@ var gameDataSchema = mongoose.Schema({
             type: mongoose.Schema.Types.Mixed
         }
     ],
-    end_data: {
-        type: mongoose.Schema.Types.Mixed
-    }
+    end_data: [
+        {
+            type: mongoose.Schema.Types.Mixed
+        }
+    ]
 });
 
 var GameData = module.exports = mongoose.model("gameData", gameDataSchema);
@@ -234,9 +236,7 @@ function createPipeline(field, query) {
                 "$match": query
             },
             {
-                "$unwind": {
-                    "path": "$sessions_length"
-                }
+                "$unwind": "$end_data"
             },
             {
                 "$group": {
@@ -262,24 +262,24 @@ function createPipeline(field, query) {
                     "Total Sessions": {
                         "$sum": "$sessions"
                     },
-                    "Average Session Length": {
-                        "$avg": "$sessions_length"
-                    },
                     "Users who completed FP": {
                         "$sum": {
-                            "$cond": [ { "$eq": [ "$ending", "None" ] }, 1, 0 ]
+                            "$cond": [ { "$ne": [ "$ending", "None" ] }, 1, 0 ]
                         }
                     },
                     "Users who did not complete FP": {
                         "$sum": {
-                            "$cond": [ { "$ne": [ "$ending", "None" ] }, 1, 0 ]
+                            "$cond": [ { "$eq": [ "$ending", "None" ] }, 1, 0 ]
                         }
+                    },
+                    "Average XP": {
+                        "$avg": "$end_data.total_points"
                     }
                 }
             },
             {
                 "$project": {
-                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
+                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average XP": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
                 }
             }
         ];
