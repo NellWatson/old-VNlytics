@@ -236,6 +236,9 @@ function createPipeline(field, query) {
                 "$match": query
             },
             {
+                "$unwind": "$sessions_length"
+            },
+            {
                 "$unwind": "$end_data"
             },
             {
@@ -262,6 +265,12 @@ function createPipeline(field, query) {
                     "Total Sessions": {
                         "$sum": "$sessions"
                     },
+                    "Average Session per User": {
+                        "$avg": "$sessions"
+                    },
+                    "Average Session Length": {
+                        "$avg": "$sessions_length"
+                    },
                     "Users who completed FP": {
                         "$sum": {
                             "$cond": [ { "$ne": [ "$ending", "None" ] }, 1, 0 ]
@@ -279,7 +288,7 @@ function createPipeline(field, query) {
             },
             {
                 "$project": {
-                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average XP": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
+                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average XP": 1, "Average Session per User": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
                 }
             }
         ];
@@ -318,7 +327,7 @@ module.exports.updateData = function(gameId, updatedObj, endDate, options, callb
     var query = { _id: gameId };
     var update = {
         $set: updatedObj,
-        $push: { "end_date": endDate, "sessions": updatedObj["sessions"] },
+        $push: { "end_date": endDate, "sessions": updatedObj["sessions"], "sessions_length": updatedObj["sessions_length"] },
         $push: { "end_data": updatedObj }
     };
 
