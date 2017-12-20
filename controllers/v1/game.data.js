@@ -34,6 +34,10 @@ v1.get("/:_gameId", function(req, res) {
 v1.get("/:_gameId/get", function(req, res) {
     var _gameId = req.params._gameId;
 
+    if (! mongoose.Types.ObjectId.isValid(_gameId)) {
+        return res.send("This is not a valid Game ID.")
+    }
+
     GameData.byId( { _id: _gameId }, function (err, doc) {
         
         if (err) {
@@ -239,7 +243,7 @@ v1.post("/:_gameId/feedback", function(req, res) {
 });
 
 v1.post("/:_gameId/end", function(req, res) {
-    var allowedUpdate = [ "play_time", "ending", "filled_form", "final_game_pass", "money_in_hand", "completion_days", "final session" ];
+    var allowedUpdate = [ "play_time", "ending", "filled_form", "sessions", "total_points" ];
     req.body = helper.sanitise(req.body);
 
     var _gameId = req.params._gameId;
@@ -249,7 +253,7 @@ v1.post("/:_gameId/end", function(req, res) {
         return res.send("Please send data to be updated with your request.");
     };
 
-    updatedObj["end_date"] = new Date().toISOString();
+    endDate = new Date().toISOString();
 
     helper.documentExists( GameData, { _id: _gameId } )
         .then(function(c) {
@@ -257,7 +261,7 @@ v1.post("/:_gameId/end", function(req, res) {
                 return res.send("The provided Game Id does not exist in our database");
             } else {
 
-                GameData.updateData( _gameId, updatedObj, {}, function(err, doc) {
+                GameData.updateData( _gameId, updatedObj, endDate, {}, function(err, doc) {
 
                     if (err) {
                         throw err;

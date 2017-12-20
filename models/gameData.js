@@ -31,9 +31,6 @@ var gameDataSchema = mongoose.Schema({
     },
     sessions_length: [
     ],
-    final_game_pass: {
-        type: Number
-    },
     multiple_ids: {
         type: Boolean,
         default: false
@@ -44,18 +41,6 @@ var gameDataSchema = mongoose.Schema({
     },
     ending: {
         type: String
-    },
-    money_in_hand: {
-        type: Number
-    },
-    completion_days: {
-        type: Number
-    },
-    founder_name: {
-        type: String
-    },
-    founder_startup: {
-        type:String,
     },
     form_data: {
         overall: {
@@ -124,54 +109,8 @@ var gameDataSchema = mongoose.Schema({
             type: mongoose.Schema.Types.Mixed
         }
     ],
-    freelance: {
-        game_pass: {
-            type: Number
-        },
-        name: {
-            type: String
-        },
-        status: {
-            type: String
-        },
-        date: {
-            type: String
-        }
-    },
-    startup: {
-        game_pass: {
-            type: Number
-        },
-        name: {
-            type: String
-        },
-        status: {
-            type: String
-        },
-        date: {
-            type: String
-        }
-    },
-    choices: {
-        game_pass: {
-            type: Number
-        },
-        label: {
-            type: String
-        },
-        status: {
-            type: String
-        },
-        date: {
-            type: String
-        }
-    },
-    game_mechanics: {
-        mail_system: [],
-        job_system: [],
-        travel_system: [],
-        to_do_system: [],
-        general: []
+    end_data: {
+        type: mongoose.Schema.Types.Mixed
     }
 });
 
@@ -278,12 +217,7 @@ function createPipeline(field, query) {
                             "If you could change one thing in the game, what would it be?": "$form_data.improvement",
                             "Was there any point where you were confused by what was happening?": "$form_data.confusing_parts",
                             "What, if anything, would have to change before you played Founder Life again?": "$form_data.player_changes",
-                            "Email": "$form_data.email",
-                            "Mail": "$game_mechanics.mail_system",
-                            "Job": "$game_mechanics.job_system",
-                            "Travel": "$game_mechanics.travel_system",
-                            "To Do": "$game_mechanics.to_do_system",
-                            "General": "$game_mechanics.general"
+                            "Email": "$form_data.email"
                         }
                     }
                 }
@@ -380,12 +314,12 @@ module.exports.getData = function(callback, limit) {
     GameData.find(callback).limit(limit);
 };
 
-module.exports.updateData = function(gameId, updatedObj, options, callback) {
+module.exports.updateData = function(gameId, updatedObj, endDate, options, callback) {
     var query = { _id: gameId };
     var update = {
         $set: updatedObj,
-        $push: { "sessions_length": updatedObj["final session"] },
-        $inc: { "sessions": 1 }
+        $push: { "end_date": endDate, "sessions": updatedObj["sessions"] },
+        $push: { "end_data": updatedObj }
     };
 
     GameData.findOneAndUpdate(query, update, options, callback);
