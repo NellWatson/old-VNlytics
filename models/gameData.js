@@ -172,28 +172,6 @@ function createPipeline(field, query) {
                 }
             }
         ];
-    } else if ( field === "stats" ) {
-        return [
-            {
-                "$match": query
-            },
-            {
-                "$group": {
-                    "_id": "completion_days",
-                    "count_days": {
-                        "$avg": "$completion_days"
-                    },
-                    "count_money": {
-                        "$avg": "$money_in_hand"
-                    }
-                }
-            },
-            {
-                "$project": {
-                    "_id": 0, "count_money": 1, "count_days": 1
-                }
-            }
-        ];
     } else if ( field === "summary" ) {
         return [
             {
@@ -340,20 +318,7 @@ module.exports.updatePlayData = function(gameId, updatedObj, callback) {
         end_date: {"$exists": false}
     };
 
-    if ( updatedObj["type"] === "freelance" ) {
-        var update = { $addToSet: { "freelance": updatedObj["data"] } };
-    } else if ( updatedObj["type"] === "startup" ) {
-        var update = { $addToSet: { "startup": updatedObj["data"] } };
-    } else if ( updatedObj["type"] === "choices" ) {
-        var update = { $addToSet: { "choices": updatedObj["data"] } };
-    } else if ("sessions_length" in updatedObj) {
-        var update = {
-            $push: updatedObj,
-            $inc: { "sessions": 1 }
-        };
-    } else {
-        var update = { $push: { "play_data": updatedObj } };
-    };
+    var update = { $push: { "play_data": updatedObj } };
     var options = { $safe: true, upsert: true, new: true };
 
     GameData.findOneAndUpdate(query, update, options, callback);

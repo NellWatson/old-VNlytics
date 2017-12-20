@@ -94,20 +94,6 @@ v1.get("/:_projectId/platform", function(req, res) {
     })
 });
 
-v1.get("/:_projectId/stats", function(req, res) {
-    var _query = { project_id: req.params._projectId };
-    var _field = "stats";
-
-    GameData.aggregateData( _field, _query, function(err, doc) {
-
-        if ( doc.length == 0 ) {
-            res.json( {"count_days": 0, "count_money": 0} )
-        } else {
-            res.send(doc[0]);
-        }
-    })
-});
-
 v1.get("/:_projectId/summary", function(req, res) {
     var _query = { project_id: req.params._projectId, filled_form: true };
     var _field = "summary";
