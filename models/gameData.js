@@ -73,28 +73,19 @@ var gameDataSchema = mongoose.Schema({
             min: 0,
             max: 2
         },
-        narrative: {
-            type: String
-        },
-        dialogue: {
-            type: String
-        },
-        character: {
-            type: String
-        },
         liked: {
             type: String
         },
         not_liked: {
             type: String
         },
-        improvement: {
+        more_of: {
             type: String
         },
-        confusing_parts: {
+        less_of: {
             type: String
         },
-        player_changes: {
+        one_change: {
             type: String
         },
         email: {
@@ -189,14 +180,11 @@ function createPipeline(field, query) {
                             "Story": "$form_data.story",
                             "Graphics": "$form_data.graphics",
                             "Sound": "$form_data.sound",
-                            "What do you think about the overall story?": "$form_data.narrative",
-                            "How did you find the in-game dialogues?": "$form_data.dialogue",
-                            "What are your views on the character? Did you find them believable?": "$form_data.character",
-                            "What did you like about Founder Life?": "$form_data.liked",
+                            "What did you like about Founders Life?": "$form_data.liked",
                             "What did you dislike about Founder Life?": "$form_data.not_liked",
-                            "If you could change one thing in the game, what would it be?": "$form_data.improvement",
-                            "Was there any point where you were confused by what was happening?": "$form_data.confusing_parts",
-                            "What, if anything, would have to change before you played Founder Life again?": "$form_data.player_changes",
+                            "Founder Life should have more?": "$form_data.more_of",
+                            "Founder Life should have less?": "$form_data.less_of",
+                            "If I was to only change one thing about the game, it would be?": "$form_data.one_change",
                             "Email": "$form_data.email"
                         }
                     }
@@ -247,26 +235,43 @@ function createPipeline(field, query) {
                         "$avg": "$sessions"
                     },
                     "Average Session Length": {
-                        "$avg": "$sessions_length"
+                        "$avg": {
+                            "$divide": [ "$sessions_length", 60 ]
+                        } 
                     },
                     "Users who completed FP": {
                         "$sum": {
-                            "$cond": [ { "$ne": [ "$ending", "None" ] }, 1, 0 ]
+                            "$cond": [ { "$eq": [ "$ending", "done" ] }, 1, 0 ]
                         }
                     },
                     "Users who did not complete FP": {
                         "$sum": {
-                            "$cond": [ { "$eq": [ "$ending", "None" ] }, 1, 0 ]
+                            "$cond": [ { "$ne": [ "$ending", "done" ] }, 1, 0 ]
                         }
                     },
                     "Average XP": {
                         "$avg": "$end_data.total_points"
+                    },
+                    "Average Days (Users who got bad end)": {
+                        "$avg": {
+                            "$cond": [ { "$ne": [ "$ending", "done" ] }, "$end_data.days", 0 ]
+                        }
                     }
                 }
             },
             {
                 "$project": {
-                    "_id": 0, "Total Play": 1, "Total Unique Users": 1, "Total Users -- Single Session": 1, "Total Users -- Multi Session": 1, "Total Sessions": 1, "Average XP": 1, "Average Session per User": 1, "Average Session Length": 1, "Users who completed FP": 1, "Users who did not complete FP": 1
+                    "_id": 0,
+                    "Total Play": 1,
+                    "Total Unique Users": 1,
+                    "Total Users -- Single Session": 1,
+                    "Total Users -- Multi Session": 1,
+                    "Total Sessions": 1, "Average XP": 1,
+                    "Average Session per User": 1,
+                    "Average Session Length": 1,
+                    "Users who completed FP": 1,
+                    "Users who did not complete FP": 1,
+                    "Average Days (Users who got bad end)": 1
                 }
             }
         ];
